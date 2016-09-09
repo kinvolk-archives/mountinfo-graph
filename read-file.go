@@ -27,20 +27,13 @@ type MountInfoLine struct {
 	SuperOptions   string   `json:"-"`
 }
 
-func extractMountinfo(flp string) ([]*MountInfoLine, error) {
+func extractMountinfo(sc *bufio.Scanner) ([]*MountInfoLine, error) {
 	var mi []*MountInfoLine
 
-	mifl, err := os.Open(flp)
-	if err != nil {
-		return nil, err
-	}
-	defer mifl.Close()
-
-	sc := bufio.NewScanner(mifl)
 	for sc.Scan() {
 		line := strings.Split(sc.Text(), " ")
-		lineLen := len(line)
-		if lineLen < 9 {
+		numOfFields := len(line)
+		if numOfFields < 9 {
 			return nil, fmt.Errorf("not enough fields in the mountinfo file: %v", line)
 		}
 		mountinfo := &MountInfoLine{
@@ -51,14 +44,14 @@ func extractMountinfo(flp string) ([]*MountInfoLine, error) {
 			Root:           line[3],
 			MountPoint:     line[4],
 			MountOptions:   line[5],
-			FileSystemType: line[(lineLen-10)+7],
-			MountSource:    line[(lineLen-10)+8],
-			SuperOptions:   line[(lineLen-10)+9],
+			FileSystemType: line[(numOfFields-10)+7],
+			MountSource:    line[(numOfFields-10)+8],
+			SuperOptions:   line[(numOfFields-10)+9],
 		}
 
 		switch {
-		case lineLen > 10:
-			for i := 0; i < (lineLen - 10); i++ {
+		case numOfFields > 10:
+			for i := 0; i < (numOfFields - 10); i++ {
 				mountinfo.OptionalFields = append(mountinfo.OptionalFields, line[6+i])
 			}
 		default:
@@ -69,14 +62,10 @@ func extractMountinfo(flp string) ([]*MountInfoLine, error) {
 	return mi, nil
 }
 
-func generateD3Tree(fln string) (*Node, error) {
+func generateD3Tree(mi []*MountInfoLine) (*Node, error) {
 	const topNodeID = "0"
 	var node *Node
 	graph := map[string]*Node{}
-	mi, err := extractMountinfo(fln)
-	if err != nil {
-		return nil, fmt.Errorf("can't extract mountinfo: %v", err)
-	}
 
 	for _, mountinfo := range mi {
 		graph[mountinfo.MountID] = &Node{
@@ -96,7 +85,19 @@ func generateD3Tree(fln string) (*Node, error) {
 func main() {
 	fln := "mi"
 
-	d3Tree, err := generateD3Tree(fln)
+	mifl, err := os.Open(fln)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	defer mifl.Close()
+	sc := bufio.NewScanner(mifl)
+
+	mi, err := extractMountinfo(sc)
+	if err != nil {
+		log.Fatalf("can't extract mountinfo: %v", err)
+	}
+
+	d3Tree, err := generateD3Tree(mi)
 	if err != nil {
 		log.Fatalf("problem generating D3 tree: %v", err)
 	}

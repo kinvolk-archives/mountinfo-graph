@@ -28,9 +28,9 @@ type MountInfoLine struct {
 	SuperOptions   string   `json:"-"`
 }
 
-func extractMountinfo(mifl io.Reader) ([]*MountInfoLine, error) {
+func extractMountinfo(mountinfoReader io.Reader) ([]*MountInfoLine, error) {
 	var mi []*MountInfoLine
-	sc := bufio.NewScanner(mifl)
+	sc := bufio.NewScanner(mountinfoReader)
 
 	for sc.Scan() {
 		line := strings.Split(sc.Text(), " ")

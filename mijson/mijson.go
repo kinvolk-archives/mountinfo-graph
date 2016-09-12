@@ -1,4 +1,4 @@
-package main
+package mijson
 
 import (
 	"bufio"
@@ -84,7 +84,7 @@ func generateD3Tree(mi []*MountInfoLine) (*Node, error) {
 	return node, nil
 }
 
-func main() {
+func GetJson() []byte {
 	fln := "mi"
 
 	mifl, err := os.Open(fln)
@@ -108,5 +108,5 @@ func main() {
 		log.Fatalf("problem converting to json: %v", err)
 	}
 
-	fmt.Println(string(d3json))
+	return d3json
 }

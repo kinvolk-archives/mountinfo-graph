@@ -1,12 +1,15 @@
 package main
 
 import (
+	"./mijson"
 	"io"
 	"net/http"
 )
 
 func loadPage(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "Hello, world")
+	j := mijson.GetJson()
+	s := string(j)
+	io.WriteString(w, s)
 }
 
 func main() {

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+  "io"
 	"strings"
 )
 
@@ -27,8 +28,9 @@ type MountInfoLine struct {
 	SuperOptions   string   `json:"-"`
 }
 
-func extractMountinfo(sc *bufio.Scanner) ([]*MountInfoLine, error) {
+func extractMountinfo(mifl io.Reader) ([]*MountInfoLine, error) {
 	var mi []*MountInfoLine
+	sc := bufio.NewScanner(mifl)
 
 	for sc.Scan() {
 		line := strings.Split(sc.Text(), " ")
@@ -90,9 +92,8 @@ func main() {
 		log.Fatalf("%v", err)
 	}
 	defer mifl.Close()
-	sc := bufio.NewScanner(mifl)
 
-	mi, err := extractMountinfo(sc)
+	mi, err := extractMountinfo(mifl)
 	if err != nil {
 		log.Fatalf("can't extract mountinfo: %v", err)
 	}

@@ -9,7 +9,7 @@ import (
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	j := mijson.GetJson()
 	t, _ := template.ParseFiles("index.html")
-	t.Execute(w, j)
+	t.Execute(w, string(j))
 }
 
 func main() {

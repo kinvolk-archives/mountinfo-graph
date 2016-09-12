@@ -2,17 +2,17 @@ package main
 
 import (
 	"./mijson"
-	"io"
+	"html/template"
 	"net/http"
 )
 
-func loadPage(w http.ResponseWriter, r *http.Request) {
+func indexHandler(w http.ResponseWriter, r *http.Request) {
 	j := mijson.GetJson()
-	s := string(j)
-	io.WriteString(w, s)
+	t, _ := template.ParseFiles("index.html")
+	t.Execute(w, j)
 }
 
 func main() {
-	http.HandleFunc("/", loadPage)
+	http.HandleFunc("/", indexHandler)
 	http.ListenAndServe(":8000", nil)
 }

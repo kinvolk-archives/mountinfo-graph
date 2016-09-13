@@ -2,31 +2,42 @@ package main
 
 import (
 	"./mijson"
-	"fmt"
 	"html/template"
 	"net/http"
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("index.html")
-	//TODO: handle errors
+	t, err := template.ParseFiles("index.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	body := "Hello world"
-	t.Execute(w, body)
-	//TODO: handle errors
+	err = t.Execute(w, body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func showHandler(w http.ResponseWriter, r *http.Request) {
 	usrInput := r.FormValue("mountinfofile")
-	fmt.Println(usrInput)
 	j := mijson.GetJson(usrInput)
-	t, _ := template.ParseFiles("show.html")
-	//TODO: handle errors
-	t.Execute(w, string(j))
-	//TODO: handle errors
+	t, err := template.ParseFiles("show.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	err = t.Execute(w, string(j))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func main() {
 	http.HandleFunc("/show", showHandler)
 	http.HandleFunc("/", indexHandler)
 	http.ListenAndServe(":8000", nil)
+	//TODO: handle errors
 }

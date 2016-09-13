@@ -1,0 +1,9 @@
+{
+	"ImportPath": "github.com/lilic/mountinfo",
+	"GoVersion": "go1.6",
+	"GodepVersion": "v74",
+	"Packages": [
+		"./..."
+	],
+	"Deps": []
+}

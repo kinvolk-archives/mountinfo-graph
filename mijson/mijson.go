@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
+	//"os"
 	"strings"
 )
 
@@ -84,16 +84,16 @@ func generateD3Tree(mi []*MountInfoLine) (*Node, error) {
 	return node, nil
 }
 
-func GetJson() []byte {
-	fln := "mi"
+func GetJson(usrInput string) []byte {
+	//fln := "mi"
 
-	mifl, err := os.Open(fln)
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-	defer mifl.Close()
+	//mifl, err := os.Open(fln)
+	//if err != nil {
+	//log.Fatalf("%v", err)
+	//}
+	//defer mifl.Close()
 
-	mi, err := extractMountinfo(mifl)
+	mi, err := extractMountinfo(strings.NewReader(usrInput))
 	if err != nil {
 		log.Fatalf("can't extract mountinfo: %v", err)
 	}

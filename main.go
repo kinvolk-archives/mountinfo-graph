@@ -12,7 +12,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	body := "Hello world"
+	body := "Paste the contents of your mountinfo file below:"
 	err = t.Execute(w, body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./migraph"
+	"github.com/kinvolk/mountinfo-graph/migraph"
 	"html/template"
 	"net/http"
 )

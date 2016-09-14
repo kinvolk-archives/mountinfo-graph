@@ -1,4 +1,4 @@
-package mijson
+package migraph
 
 import (
 	"bufio"
@@ -82,7 +82,7 @@ func generateD3Tree(mi []*MountInfoLine) (*Node, error) {
 	return node, nil
 }
 
-func GetJson(usrInput string) ([]byte, error) {
+func GenerateJSON(usrInput string) ([]byte, error) {
 	mi, err := extractMountinfo(strings.NewReader(usrInput))
 	if err != nil {
 		return nil, err

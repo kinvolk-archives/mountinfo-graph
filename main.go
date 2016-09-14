@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./mijson"
+	"./migraph"
 	"html/template"
 	"net/http"
 )
@@ -22,7 +22,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 func showHandler(w http.ResponseWriter, r *http.Request) {
 	usrInput := r.FormValue("mountinfofile")
-	j, err := mijson.GetJson(usrInput)
+	j, err := migraph.GenerateJSON(usrInput)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

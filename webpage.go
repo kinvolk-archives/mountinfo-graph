@@ -22,7 +22,11 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 func showHandler(w http.ResponseWriter, r *http.Request) {
 	usrInput := r.FormValue("mountinfofile")
-	j := mijson.GetJson(usrInput)
+	j, err := mijson.GetJson(usrInput)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	t, err := template.ParseFiles("show.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

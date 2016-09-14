@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"strings"
 )
 
@@ -83,21 +82,21 @@ func generateD3Tree(mi []*MountInfoLine) (*Node, error) {
 	return node, nil
 }
 
-func GetJson(usrInput string) []byte {
+func GetJson(usrInput string) ([]byte, error) {
 	mi, err := extractMountinfo(strings.NewReader(usrInput))
 	if err != nil {
-		log.Fatalf("can't extract mountinfo: %v", err)
+		return nil, err
 	}
 
 	d3Tree, err := generateD3Tree(mi)
 	if err != nil {
-		log.Fatalf("problem generating D3 tree: %v", err)
+		return nil, err
 	}
 
 	d3json, err := json.Marshal(d3Tree)
 	if err != nil {
-		log.Fatalf("problem converting to json: %v", err)
+		return nil, err
 	}
 
-	return d3json
+	return d3json, nil
 }

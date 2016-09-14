@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/lilic/mountinfo",
+	"ImportPath": "github.com/kinvolk/mountinfo-graph",
 	"GoVersion": "go1.6",
 	"GodepVersion": "v74",
 	"Packages": [

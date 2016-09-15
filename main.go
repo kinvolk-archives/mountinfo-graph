@@ -4,6 +4,7 @@ import (
 	"github.com/kinvolk/mountinfo-graph/bindata"
 	"github.com/kinvolk/mountinfo-graph/migraph"
 	"html/template"
+	"log"
 	"net/http"
 )
 
@@ -43,6 +44,5 @@ func showHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/show", showHandler)
 	http.HandleFunc("/", indexHandler)
-	http.ListenAndServe(":8000", nil)
-	//TODO: handle errors
+	log.Fatal(http.ListenAndServe(":8000", nil))
 }

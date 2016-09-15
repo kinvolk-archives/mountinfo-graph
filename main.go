@@ -8,18 +8,24 @@ import (
 	"net/http"
 )
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.New("index").Parse(bindata.Index())
+func generateFromTemplate(htmlTemplate string, w http.ResponseWriter, body string) {
+	m := map[string]func() string{
+		"index": bindata.Index,
+		"show":  bindata.Show,
+	}
+	t, err := template.New(htmlTemplate).Parse(m[htmlTemplate]())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	body := "Paste the contents of your mountinfo file below:"
 	err = t.Execute(w, body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
 	}
+}
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	generateFromTemplate("index", w, "Paste the contents of your mountinfo file below:")
 }
 
 func showHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,16 +35,7 @@ func showHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	t, err := template.New("show").Parse(bindata.Show())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	err = t.Execute(w, string(j))
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	generateFromTemplate("show", w, string(j))
 }
 
 func main() {

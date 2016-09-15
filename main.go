@@ -1,13 +1,14 @@
 package main
 
 import (
+	"github.com/kinvolk/mountinfo-graph/bindata"
 	"github.com/kinvolk/mountinfo-graph/migraph"
 	"html/template"
 	"net/http"
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("index.html")
+	t, err := template.New("index").Parse(bindata.Index())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -27,7 +28,7 @@ func showHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	t, err := template.ParseFiles("show.html")
+	t, err := template.New("show").Parse(bindata.Show())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

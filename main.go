@@ -9,11 +9,7 @@ import (
 )
 
 func generateFromTemplate(htmlTemplate string, w http.ResponseWriter, body string) {
-	m := map[string]func() string{
-		"index": bindata.Index,
-		"show":  bindata.Show,
-	}
-	t, err := template.New(htmlTemplate).Parse(m[htmlTemplate]())
+	t, err := template.New("tmpl").Parse(htmlTemplate)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -25,7 +21,7 @@ func generateFromTemplate(htmlTemplate string, w http.ResponseWriter, body strin
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	generateFromTemplate("index", w, "Paste the contents of your mountinfo file below:")
+	generateFromTemplate(bindata.Index(), w, "Paste the contents of your mountinfo file below:")
 }
 
 func showHandler(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +31,7 @@ func showHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	generateFromTemplate("show", w, string(j))
+	generateFromTemplate(bindata.Show(), w, string(j))
 }
 
 func main() {

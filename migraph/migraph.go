@@ -1,12 +1,10 @@
-package main
+package migraph
 
 import (
 	"bufio"
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
-	"os"
 	"strings"
 )
 
@@ -84,29 +82,21 @@ func generateD3Tree(mi []*MountInfoLine) (*Node, error) {
 	return node, nil
 }
 
-func main() {
-	fln := "mi"
-
-	mifl, err := os.Open(fln)
+func GenerateJSON(usrInput string) ([]byte, error) {
+	mi, err := extractMountinfo(strings.NewReader(usrInput))
 	if err != nil {
-		log.Fatalf("%v", err)
-	}
-	defer mifl.Close()
-
-	mi, err := extractMountinfo(mifl)
-	if err != nil {
-		log.Fatalf("can't extract mountinfo: %v", err)
+		return nil, err
 	}
 
 	d3Tree, err := generateD3Tree(mi)
 	if err != nil {
-		log.Fatalf("problem generating D3 tree: %v", err)
+		return nil, err
 	}
 
 	d3json, err := json.Marshal(d3Tree)
 	if err != nil {
-		log.Fatalf("problem converting to json: %v", err)
+		return nil, err
 	}
 
-	fmt.Println(string(d3json))
+	return d3json, nil
 }
